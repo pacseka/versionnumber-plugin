@@ -10,7 +10,7 @@
   </parent>
   <groupId>org.jvnet.hudson.tools</groupId>
   <artifactId>versionnumber</artifactId>
-  <version>1.8.2-SNAPSHOT</version>
+  <version>1.8.2-SNAPSHOT-PACSEK</version>
   <packaging>hpi</packaging>
 
   <properties>
