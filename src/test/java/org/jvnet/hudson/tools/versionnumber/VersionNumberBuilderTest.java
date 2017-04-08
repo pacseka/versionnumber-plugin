@@ -13,6 +13,9 @@ import hudson.slaves.EnvironmentVariablesNodeProperty;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+
+import java.util.Calendar;
 
 import org.jvnet.hudson.test.HudsonTestCase;
 
@@ -98,6 +101,28 @@ public class VersionNumberBuilderTest extends HudsonTestCase {
         job.setScm(new NullSCM());
         build = buildAndAssertSuccess(job);
         assertBuildsAllTime(4, build);
+    }
+    
+    public void testUseAsDaysSinceProjectStart() throws Exception {
+        
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+       
+        int days = 200;
+        calendar.setTimeInMillis(calendar.getTime().getTime() - (long)days*1000*60*60*24);
+        
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String projectDate = format.format(calendar.getTime());
+         
+        FreeStyleProject job = createFreeStyleProject("versionNumberJob");
+        
+        VersionNumberBuilder versionNumberBuilder = new VersionNumberBuilder(
+        "2.0.${DAYS_SINCE_PROJECT_START}", projectDate, null, null, null, null, null, null, null, false, true);
+        job.getBuildWrappersList().add(versionNumberBuilder);
+        FreeStyleBuild build = buildAndAssertSuccess(job);
+        assertEquals("2.0.200", build.getDisplayName());  
     }
     
     public void testUseAsBuildDisplayName() throws Exception {

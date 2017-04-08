@@ -166,6 +166,15 @@ public class VersionNumberCommon {
                     projectStartCal.setTime(projectStartDate);
                     int yearsSinceStart = buildDate.get(Calendar.YEAR) - projectStartCal.get(Calendar.YEAR);
                     replaceValue = sizeTo(Integer.toString(yearsSinceStart), argumentString.length());
+                } else if ("DAYS_SINCE_PROJECT_START".equals(expressionKey)) {
+                                        
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.set(Calendar.HOUR_OF_DAY, 0);
+                    calendar.set(Calendar.MINUTE, 0);
+                    calendar.set(Calendar.SECOND, 0);
+                    Date today = calendar.getTime();
+                    int daysSinceStart = (int)( (today.getTime() - projectStartDate.getTime()) / (1000 * 60 * 60 * 24));
+                    replaceValue = sizeTo(Integer.toString(daysSinceStart), argumentString.length());
                 }
                 // if it's not one of the defined values, check the environment variables (again)
                 // NOTE: This probably means, that an environment-variable resolves to itself, which
